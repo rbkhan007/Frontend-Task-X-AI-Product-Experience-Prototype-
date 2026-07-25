@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="/logo.svg" alt="Xai" width="72" height="72">
+  <img src="https://raw.githubusercontent.com/rbkhan007/Frontend-Task-X-AI-Product-Experience-Prototype-/main/public/logo.svg" alt="Xai" width="72" height="72">
 
   <h1>Xai — Intelligence Workspace</h1>
 
@@ -26,15 +26,22 @@
 Xai is a premium single-page product experience that immerses the user in the full data-to-decision loop. Scroll through 8 interconnected sections — from a chaotic particle field representing raw data, through structured analysis, to AI-powered automation — all rendered with production-grade engineering (zero ESLint errors, zero TypeScript errors, zero CLS).
 
 ```mermaid
-graph LR
-    RD[Raw Data] --> SI[Structured Intelligence]
-    SI --> AI[Actionable Insight]
-    AI --> AA[AI Automation]
+flowchart LR
+    subgraph Pipeline["Data → Intelligence Pipeline"]
+        direction LR
+        RD[("Raw Data")]
+        SI["Structured Intelligence"]
+        AI["Actionable Insight"]
+        AA["AI Automation"]
+    end
+    RD -->|ingest & clean| SI
+    SI -->|analyze & enrich| AI
+    AI -->|execute| AA
     AA -.->|feedback loop| RD
-    style RD fill:#34d39922,stroke:#34d399,stroke-width:2px
-    style SI fill:#34d39933,stroke:#34d399,stroke-width:2px
-    style AI fill:#34d39944,stroke:#34d399,stroke-width:2px
-    style AA fill:#fbbf2422,stroke:#fbbf24,stroke-width:2px
+    style RD fill:#34d399,fill-opacity:.13,stroke:#34d399,stroke-width:2px
+    style SI fill:#34d399,fill-opacity:.20,stroke:#34d399,stroke-width:2px
+    style AI fill:#34d399,fill-opacity:.27,stroke:#34d399,stroke-width:2px
+    style AA fill:#fbbf24,fill-opacity:.13,stroke:#fbbf24,stroke-width:2px
 ```
 
 ---
@@ -44,42 +51,42 @@ graph LR
 ```mermaid
 flowchart TB
     subgraph Client["Client Layer"]
-        L[layout.tsx] --> Nav[SiteNav]
-        L --> BG[Scene3DBackground]
-        L --> Prog[ScrollProgress]
-        L --> SS[SmoothScroll]
-        L --> Footer[SiteFooter]
+        L["layout.tsx"] --> Nav["SiteNav"]
+        L --> BG["Scene3DBackground"]
+        L --> Prog["ScrollProgress"]
+        L --> SS["SmoothScroll"]
+        L --> Footer["SiteFooter"]
     end
 
     subgraph Pages["Pages (6 routes)"]
         direction LR
-        Home["/ landing"]
+        Home["/ (landing)"]
         Signin["/signin"]
         RA["/request-access"]
         Admin["/admin"]
-        API["/api"]
+        API["/api (health)"]
     end
 
     subgraph Sections["Landing Sections"]
         direction TB
-        H[Hero] --> NB[NarrativeBand]
-        NB --> IF[InsightFlow]
-        IF --> DP[DashboardPreview]
-        DP --> SC[SignatureCanvas]
-        SC --> Aut[Automations]
-        Aut --> PL[Pillars]
-        PL --> MB[MetricsBand]
+        H["Hero • #top"] --> NB["Narrative Band"]
+        NB --> IF["Insight Flow • #flow"]
+        IF --> DP["Dashboard • #workspace"]
+        DP --> SC["Signature Core • #core"]
+        SC --> Aut["Automations • #automations"]
+        Aut --> PL["Pillars"]
+        PL --> MB["Metrics"]
     end
 
     subgraph Three["Three.js Canvas"]
-        HC[HeroCanvas] -->|GLSL Shader| PF[ParticleField<br/>1,800 particles]
-        SigC[SignatureCanvas] -->|MeshDistortMaterial| CN[CoreNodes<br/>54 orbit nodes]
+        HC["HeroCanvas"] -->|GLSL Shader| PF["ParticleField<br/>1,800 particles"]
+        SigC["SignatureCanvas"] -->|MeshDistortMaterial| CN["CoreNodes<br/>54 orbit nodes"]
     end
 
     subgraph Data["Data Layer"]
-        SA[Server Action] --> PR[Prisma ORM]
-        PR --> PG[(PostgreSQL)]
-        AUTH[Zustand Store] --> LS[localStorage]
+        SA["Server Action"] --> PR["Prisma ORM"]
+        PR --> PG[("PostgreSQL")]
+        AUTH["Zustand Store"] --> LS["localStorage"]
     end
 
     Home --> Sections
@@ -126,10 +133,10 @@ flowchart TD
     A -.- note1(("auto-oscillate<br/>~15.7s period"))
     E -.- note2(("auto-oscillate<br/>~20.9s period"))
 
-    style A fill:#34d39922,stroke:#34d399,stroke-width:2px
-    style E fill:#34d39922,stroke:#34d399,stroke-width:2px
-    style note1 fill:#fbbf2411,stroke:#fbbf24,stroke-dasharray: 3 3
-    style note2 fill:#fbbf2411,stroke:#fbbf24,stroke-dasharray: 3 3
+    style A fill:#34d399,fill-opacity:.13,stroke:#34d399,stroke-width:2px
+    style E fill:#34d399,fill-opacity:.13,stroke:#34d399,stroke-width:2px
+    style note1 fill:#fbbf24,fill-opacity:.07,stroke:#fbbf24,stroke-dasharray: 3 3
+    style note2 fill:#fbbf24,fill-opacity:.07,stroke:#fbbf24,stroke-dasharray: 3 3
 ```
 
 | Anchor | Section | Interaction |
@@ -156,8 +163,8 @@ flowchart LR
     NF["/_not-found"] --> Static
     API["/api"] --> Dynamic((Server Dynamic))
 
-    style Static fill:#34d39922,stroke:#34d399,stroke-width:2px
-    style Dynamic fill:#fbbf2422,stroke:#fbbf24,stroke-width:2px
+    style Static fill:#34d399,fill-opacity:.13,stroke:#34d399,stroke-width:2px
+    style Dynamic fill:#fbbf24,fill-opacity:.13,stroke:#fbbf24,stroke-width:2px
 ```
 
 | Route | Type | Description |
@@ -426,18 +433,19 @@ mindmap
 
 ```mermaid
 flowchart LR
-    subgraph CI["CI/CD (Netlify)"]
+    subgraph CI["CI/CD Pipeline (Netlify)"]
         direction LR
-        GH[Git Push] --> NF[Netlify Import]
-        NF --> Build[npm run build]
-        Build --> Deploy[.next/ → Production]
+        GH[("Git Push")] --> NF["Netlify Import"]
+        NF --> Build["npm run build"]
+        Build --> Deploy[".next/ → Production"]
     end
 
-    Deploy --> CDN[Global CDN]
-    Deploy --> HDR[Security Headers<br/>HSTS · XFO · CSP]
+    Deploy --> CDN["Global CDN"]
+    Deploy --> HDR["Security Headers<br/>HSTS · XFO · CSP"]
+    Deploy --> Monitor["Health Checks<br/>/api endpoint"]
 
-    style GH fill:#34d39922,stroke:#34d399
-    style Deploy fill:#34d39922,stroke:#34d399
+    style GH fill:#34d399,fill-opacity:.13,stroke:#34d399
+    style Deploy fill:#34d399,fill-opacity:.13,stroke:#34d399
 ```
 
 Pre-configured via `netlify.toml` + `public/_headers`:
