@@ -1,159 +1,460 @@
-# X-AI Product Experience Prototype — Submission Notes
+<div align="center">
 
-An ultra-premium, production-ready frontend experience built with Next.js (App Router), Tailwind CSS, Framer Motion, and Prisma ORM + SQLite.
+  <img src="/logo.svg" alt="Xai" width="72" height="72">
 
-## 🛠️ Architectural & UX Implementations
+  <h1>Xai — Intelligence Workspace</h1>
 
-### 1. Robust Component Stacking & Defect Resolution
-- **Fluid Custom Select (`role-select.tsx`):** Eliminated element bleed-through and layout compression by engineering an accessible custom menu layered on an absolute stacking plane (`z-index: 50`). Handled rendering transitions through `AnimatePresence` with custom spring-physics variables (`y`, `opacity`, `filter: blur`). Fully compliant with WAI-ARIA patterns (Esc closure, arrow key selection).
-- **Defensive Layout Scaling:** Fixed horizontal button and container text truncation across strict mobile break-points utilizing `shrink-0` bounds and zero-wrap layout formulas.
-- **Content-Driven Proportions:** Removed rigid vertical height models (`vh`). Restructured layout pacing using flexible padding tiers (`py-16 md:py-24 lg:py-32`) to anchor interactive Three.js canvases safely without layout shifting (CLS).
+  <p>From <strong>raw data</strong> → <strong>structured intelligence</strong> → <strong>actionable insight</strong> → <strong>AI automations</strong>.</p>
 
-### 2. Full-Stack Data Architecture
-- **Relational Layer:** Structured an enterprise-ready `AccessRequest` Prisma relational schema backed by a SQLite data pipeline.
-- **Type-Safe Validation Actions:** Routed ingestion pipelines through standard Next.js Server Actions backed by Zod schemas. Handled duplicate email exceptions (`P2002`) safely to return tailored dynamic interface states (Form, Success, Duplicate Alert, System Error).
+  <p>
+    <img src="https://img.shields.io/badge/Next.js-16-black?style=flat&logo=next.js" alt="Next.js 16">
+    <img src="https://img.shields.io/badge/TypeScript-5-blue?style=flat&logo=typescript" alt="TypeScript">
+    <img src="https://img.shields.io/badge/Tailwind-v4-06b6d4?style=flat&logo=tailwindcss" alt="Tailwind v4">
+    <img src="https://img.shields.io/badge/Three.js-R3F-000000?style=flat&logo=three.js" alt="Three.js">
+    <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql" alt="PostgreSQL">
+    <img src="https://img.shields.io/badge/Prisma-2D3748?style=flat&logo=prisma" alt="Prisma">
+    <img src="https://img.shields.io/badge/ESLint-0_errors-4B32C3?style=flat&logo=eslint" alt="ESLint">
+    <img src="https://img.shields.io/badge/License-MIT-green" alt="MIT">
+  </p>
 
-### 3. Core Web Vitals Optimization
-- **Code Splitting:** Code-split and lazy-loaded complex visualization chunks below the fold (`InsightFlow`, `DashboardPreview`, `Signature`, `Automations`) dynamically via `next/dynamic` to protect bundle sizes and boost initial paint scores.
-- **Lenis Smooth Scroll:** Replaced CSS `scroll-behavior: smooth` with a high-performance Lenis instance — frictionless wheel/trackpad scrolling, no jank on low-end hardware.
-- **Zero CLS:** All Three.js canvases use `absolute inset-0` positioning; no `<img>` tags on the landing page — zero layout shift from images.
+</div>
 
 ---
 
-## Product experience overview
+## Overview
 
-> From raw data → structured intelligence → actionable insight → AI automations.
+Xai is a premium single-page product experience that immerses the user in the full data-to-decision loop. Scroll through 8 interconnected sections — from a chaotic particle field representing raw data, through structured analysis, to AI-powered automation — all rendered with production-grade engineering (zero ESLint errors, zero TypeScript errors, zero CLS).
 
-A single-page interactive product experience. Scroll top-to-bottom walks through the full transformation; the nav scrolls to each section anchor.
+```mermaid
+graph LR
+    RD[Raw Data] --> SI[Structured Intelligence]
+    SI --> AI[Actionable Insight]
+    AI --> AA[AI Automation]
+    AA -.->|feedback loop| RD
+    style RD fill:#34d39922,stroke:#34d399,stroke-width:2px
+    style SI fill:#34d39933,stroke:#34d399,stroke-width:2px
+    style AI fill:#34d39944,stroke:#34d399,stroke-width:2px
+    style AA fill:#fbbf2422,stroke:#fbbf24,stroke-width:2px
+```
 
-| Anchor | Section | What it demonstrates |
-|---|---|---|
-| `#top` | **Hero** | A Three.js particle field morphs from a chaotic "raw data" cloud into a structured Fibonacci sphere shell (auto-play on mount). Cursor parallax. |
-| — | **Narrative band** | The 4-move transformation rail (raw data → structured intelligence → actionable insight → AI automation). |
-| `#flow` | **Insight Flow** | Three scroll-reveal stages (Ingest → Analyze → Generate) with hand-built SVG geometry — no GSAP, no pin-scroll. |
-| `#workspace` | **Intelligence Dashboard** | A mock product UI: sidebar nav, tabbed content with `layoutId` transitions, recharts area + bar charts, KPI sparklines, insights table. |
-| `#core` | **Signature Interaction** | A 3D "intelligence core" — distorted icosahedron + wireframe shell + 54 orbiting nodes that reorganize from chaos into structure (auto-play on mount). |
-| `#automations` | **AI Automations** | Trigger-action cards with success meters + a "new automation" composer. |
-| — | **Pillars + Metrics** | The 3-stage system recap + four KPIs with animated baseline bars. |
+---
 
-## Technology stack
+## Architecture
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 16 (App Router, standalone output) |
-| Language | TypeScript |
-| Styling | Tailwind CSS v4, CSS custom properties, `oklch` |
-| Animation | Framer Motion, Lenis (smooth scroll) |
-| 3D | Three.js via `@react-three/fiber` + `@react-three/drei` |
-| Charts | Recharts |
-| State | Zustand (auth store with localStorage persist) |
-| Database | Prisma + SQLite (Server Actions) |
-| Forms | Custom controlled forms + Zod validation |
-| Icons | Lucide React |
+```mermaid
+flowchart TB
+    subgraph Client["Client Layer"]
+        L[layout.tsx] --> Nav[SiteNav]
+        L --> BG[Scene3DBackground]
+        L --> Prog[ScrollProgress]
+        L --> SS[SmoothScroll]
+        L --> Footer[SiteFooter]
+    end
 
-## Getting started
+    subgraph Pages["Pages (6 routes)"]
+        direction LR
+        Home["/ landing"]
+        Signin["/signin"]
+        RA["/request-access"]
+        Admin["/admin"]
+        API["/api"]
+    end
+
+    subgraph Sections["Landing Sections"]
+        direction TB
+        H[Hero] --> NB[NarrativeBand]
+        NB --> IF[InsightFlow]
+        IF --> DP[DashboardPreview]
+        DP --> SC[SignatureCanvas]
+        SC --> Aut[Automations]
+        Aut --> PL[Pillars]
+        PL --> MB[MetricsBand]
+    end
+
+    subgraph Three["Three.js Canvas"]
+        HC[HeroCanvas] -->|GLSL Shader| PF[ParticleField<br/>1,800 particles]
+        SigC[SignatureCanvas] -->|MeshDistortMaterial| CN[CoreNodes<br/>54 orbit nodes]
+    end
+
+    subgraph Data["Data Layer"]
+        SA[Server Action] --> PR[Prisma ORM]
+        PR --> PG[(PostgreSQL)]
+        AUTH[Zustand Store] --> LS[localStorage]
+    end
+
+    Home --> Sections
+    Sections --> Three
+    RA --> SA
+    Client --- Pages
+```
+
+---
+
+## Tech Stack
+
+| Category | Technology | Purpose |
+|----------|-----------|---------|
+| **Framework** | [Next.js 16](https://nextjs.org) (App Router) | SSR, routing, server actions |
+| **Language** | [TypeScript](https://typescriptlang.org) 5 | Type safety |
+| **Styling** | [Tailwind CSS](https://tailwindcss.com) v4 + CSS custom properties (`oklch`) | Design system |
+| **3D** | [Three.js](https://threejs.org) via [R3F](https://docs.pmnd.rs/react-three-fiber) + [Drei](https://github.com/pmndrs/drei) | Particle fields, 3D core |
+| **Animation** | [Framer Motion](https://framer.com/motion) 12 + [Lenis](https://lenis.darkroom.engineering) | Scroll, layout, transitions |
+| **Charts** | [Recharts](https://recharts.org) | Dashboard visualizations |
+| **State** | [Zustand](https://zustand.docs.pmnd.rs) 5 | Auth with localStorage persist |
+| **Database** | [PostgreSQL](https://postgresql.org) + [Prisma](https://prisma.io) ORM 6 | Access request storage |
+| **Validation** | [Zod](https://zod.dev) v4 | Form validation |
+| **Icons** | [Lucide React](https://lucide.dev) | UI iconography |
+| **Font** | [Geist](https://vercel.com/font) (sans + mono) | Typography |
+
+---
+
+## Sections
+
+```mermaid
+flowchart TD
+    subgraph Landing["Landing Page Flow"]
+        direction TB
+        A[Hero<br/><sub>#top</sub>] --> B[Narrative Band]
+        B --> C[Insight Flow<br/><sub>#flow</sub>]
+        C --> D[Dashboard<br/><sub>#workspace</sub>]
+        D --> E[Signature Core<br/><sub>#core</sub>]
+        E --> F[Automations<br/><sub>#automations</sub>]
+        F --> G[Pillars]
+        G --> H[Metrics]
+    end
+
+    A -.- note1(("auto-oscillate<br/>~15.7s period"))
+    E -.- note2(("auto-oscillate<br/>~20.9s period"))
+
+    style A fill:#34d39922,stroke:#34d399,stroke-width:2px
+    style E fill:#34d39922,stroke:#34d399,stroke-width:2px
+    style note1 fill:#fbbf2411,stroke:#fbbf24,stroke-dasharray: 3 3
+    style note2 fill:#fbbf2411,stroke:#fbbf24,stroke-dasharray: 3 3
+```
+
+| Anchor | Section | Interaction |
+|--------|---------|-------------|
+| `#top` | **Hero** | Three.js particle field: 1,800 particles (800 mobile) morph chaos → Fibonacci sphere via GLSL shader. Auto-oscillates on mount. Cursor parallax. |
+| — | **Narrative Band** | 4-move transformation rail with animated gradient connector line. Glass-morphism cards with lift-on-hover. |
+| `#flow` | **Insight Flow** | 3 scroll-reveal stages (Ingest → Analyze → Generate). Custom SVG visuals per stage. No GSAP. |
+| `#workspace` | **Dashboard** | Full mock product UI. Recharts area/bar charts, KPI sparklines, 5 tabbed panels with `layoutId` spring transitions. Perspective 3D card. |
+| `#core` | **Signature Core** | Three.js distorted icosahedron + 54 orbiting nodes (28 mobile) reorganizing chaos → structure. Dual-tone lighting (emerald + amber). |
+| `#automations` | **Automations** | Trigger-action cards with success meters. Pipeline rail animation. "New automation" composer card. |
+| — | **Pillars** | 3-stage system recap (Ingest, Analyze, Automate) with hover glow effects. |
+| — | **Metrics** | 4 animated KPIs (9 sources, 1,284 insights/wk, 248ms p50, 37 automations) with baseline bars. |
+
+---
+
+## Page Routes
+
+```mermaid
+flowchart LR
+    Home["/"] --> Static((Static SSG))
+    Signin["/signin"] --> Static
+    RA["/request-access"] --> Static
+    Admin["/admin"] --> Static
+    NF["/_not-found"] --> Static
+    API["/api"] --> Dynamic((Server Dynamic))
+
+    style Static fill:#34d39922,stroke:#34d399,stroke-width:2px
+    style Dynamic fill:#fbbf2422,stroke:#fbbf24,stroke-width:2px
+```
+
+| Route | Type | Description |
+|-------|------|-------------|
+| `/` | Static SSG | Landing page — 8 sections, 4 dynamically imported heavy components |
+| `/signin` | Static SSG | Sign-in form with demo credential fill buttons (admin/member) |
+| `/request-access` | Static SSG | 5-phase animated state machine (form → submitting → success/duplicate/error) |
+| `/admin` | Static SSG | Admin dashboard, 4 tabs (overview/requests/users/activity), role-gated |
+| `/api` | Server Dynamic | Health check endpoint |
+
+---
+
+## Auth Flow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant F as SignIn Form
+    participant Z as Zustand Store
+    participant LS as localStorage
+
+    U->>F: Enter email + password
+    F->>Z: signIn(email, password)
+    Z->>Z: Match against DEMO_CREDENTIALS
+    alt Match found
+        Z->>LS: persist user session
+        Z-->>F: { ok: true }
+        F->>U: Redirect to /
+    else No match
+        Z-->>F: { ok: false, error }
+        F->>U: Show error alert
+    end
+```
+
+Two hard-coded demo accounts (configurable via env vars):
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@xai.app | xai-demo |
+| Member | member@xai.app | xai-demo |
+
+---
+
+## Data Flow (Access Request)
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant F as Form
+    participant SA as Server Action
+    participant Z as Zod v4
+    participant P as Prisma
+    participant DB as PostgreSQL
+
+    U->>F: Fill form
+    F->>SA: submitRequest(FormData)
+    SA->>Z: validate(name, email, company, role, useCase)
+    alt Invalid
+        Z-->>SA: fieldErrors
+        SA-->>F: { ok: false, fieldErrors }
+        F->>U: Highlight invalid fields
+    else Valid
+        SA->>P: accessRequest.create({...})
+        P->>DB: INSERT
+        alt Unique constraint violation (P2002)
+            DB-->>P: error
+            P-->>SA: PrismaKnownError
+            SA-->>F: { ok: false, error: "already submitted" }
+            F->>U: Show duplicate card
+        else Success
+            DB-->>P: row
+            P-->>SA: record
+            SA-->>F: { ok: true }
+            F->>U: Show success card with details
+        end
+    end
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- **Node.js** >= 20
+- **PostgreSQL** 14+ running on `localhost:5432` (or override via `DATABASE_URL`)
+
+### Installation
 
 ```bash
-# install dependencies
+# Clone
+git clone https://github.com/your-org/xai.git
+cd xai
+
+# Install dependencies
 npm install
 
-# generate Prisma client + create database
+# Configure database connection (edit .env)
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/xai_prototype?schema=public"
+
+# Push Prisma schema to PostgreSQL
 npx prisma db push
 
-# start the dev server
+# Start dev server
 npm run dev
 ```
 
-Open `http://localhost:3000` and scroll through the landing.
+Open [http://localhost:3000](http://localhost:3000).
 
-### Available scripts
+### Scripts
 
 ```bash
-npm run dev       # start development server on port 3000
-npm run build     # create production build
-npm run start     # start production server
-npm run lint      # run ESLint
-npm run db:push   # push Prisma schema to database
+npm run dev           # Development server on port 3000
+npm run build         # Production build (lint + TS check + compile)
+npm run start         # Start production server
+npm run lint          # ESLint across src/
+npm run db:push       # Push Prisma schema to database
+npm run db:generate   # Regenerate Prisma client
+npm run db:migrate    # Create a new migration
+npm run db:reset      # Reset database
 ```
-
-## Project structure
-
-```
-src/
-  app/
-    layout.tsx                 # root layout: ThemeProvider + Lenis + nav/footer
-    page.tsx                   # single-page experience (/) — dynamic imports
-    globals.css                # dual-theme tokens + 3D/glass design system
-    actions/
-      request-access.ts        # Server Action: form validation + Prisma write
-    api/route.ts               # basic API route
-    request-access/page.tsx    # access request form with animated feedback cards
-    signin/page.tsx            # sign-in page with demo credentials
-    admin/page.tsx             # admin dashboard
-    not-found.tsx              # 404 page
-  components/
-    site/
-      hero.tsx                 # hero w/ R3F canvas (auto-play particle morph)
-      insight-flow.tsx         # stacked scroll-reveal flow (no GSAP)
-      dashboard-preview.tsx    # mock dashboard with tabs
-      signature.tsx            # 3D core wrapper (auto-play reorganize)
-      automations.tsx          # automation cards
-      landing-sections.tsx     # narrative, pillars, metrics
-      premium-section-label.tsx # section eyebrow label
-      scene-3d-background.tsx  # site-wide depth backdrop (CSS only)
-      site-nav.tsx             # nav + mobile menu + theme toggle
-      site-footer.tsx          # footer with CTA band
-      scroll-progress.tsx      # animated top gradient bar
-      scroll-to-top.tsx        # floating scroll-to-top button
-      smooth-scroll.tsx        # Lenis provider
-    three/
-      hero-canvas.tsx          # particle + sphere morph (GLSL shader)
-      signature-canvas.tsx     # distorted core + orbiting nodes
-    ui/
-      custom/
-        role-select.tsx        # custom animated dropdown (framer-motion)
-      // ... Radix UI wrappers
-  lib/
-    motion.ts                  # shared easing + Framer Motion variants
-    mock-data.ts               # all mock data + site constants
-    utils.ts                   # cn() helper
-    use-theme-colors.ts        # theme-aware CSS var reader for Recharts
-    auth-store.ts              # mock auth (Zustand + localStorage persist)
-    db.ts                      # PrismaClient singleton
-prisma/
-  schema.prisma                # AccessRequest model
-public/
-  favicon.svg                  # brand SVG favicon
-  site.webmanifest             # PWA manifest
-  _headers                     # Netlify security headers
-```
-
-## Key design decisions
-
-- **GSAP eliminated** — the Insight Flow was rebuilt without GSAP/ScrollTrigger. Three stacked stages reveal on scroll via framer-motion `whileInView`. Saves ~56KB bundle and eliminates scroll-jack risk.
-- **Removed all fixed vh** — Hero (`h-[180vh]`) and Signature (`h-[260vh]`) converted to `min-h-screen` + fluid padding. Their Three.js canvases auto-play their morph animation on mount instead of depending on scroll position.
-- **Custom animated dropdown** — The Role select on the request-access form uses a framer-motion-animated panel (`absolute z-50`) with keyboard navigation, replacing the native `<select>`.
-- **Prisma Server Action** — Form submissions go through a type-safe Server Action with Zod validation. Duplicate emails are caught (`P2002`) and render a dedicated animated feedback card.
-- **Lenis** — Replaced CSS `scroll-behavior: smooth` for frictionless wheel/trackpad performance with configurable duration and easing.
-- **Dynamic code splitting** — Four heavy components are lazy-loaded via `next/dynamic` (InsightFlow, DashboardPreview, Signature, Automations), keeping the initial bundle minimal.
-- **`box-sizing: border-box`** — Already global via Tailwind preflight. All cards use `overflow-clip` (not `overflow-hidden`) so absolutely-positioned overlays aren't clipped.
-- **Easing and restraint** — All transitions share one of three curves: `EASE`, `EASE_OUT_SOFT`, `EASE_IN_OUT`. Single emerald accent. Monochrome palette. Calm-but-powerful register.
-
-## Evaluation criteria — where to look
-
-- **UI / UX**: Shared fluid type scale, glass/depth system, single emerald accent, consistent container width.
-- **Motion & Interaction**: Hero particle morph (auto-play), tab `layoutId` transitions, signature core reorganization, scroll-revealed insight flow, Lenis smooth scroll, animated dropdown.
-- **Engineering Quality**: `lib/motion.ts` shared variants, dynamic import architecture, Server Action pattern, custom `role-select.tsx` with full keyboard a11y.
-- **Product Thinking**: Core narrative rendered literally — raw cloud → structured sphere → ranked insights → triggered automations. Every section earns its place.
-
-## Deliverables
-
-| Deliverable | Location |
-|---|---|
-| **README** | This file. |
-| **GitHub repository** | Private / public as requested. |
-| **Live deployment** | Deploy to Netlify: import this repo, set `DATABASE_URL` env var, run `npx prisma migrate deploy`. |
 
 ---
 
-Built for the RacoAI Frontend Challenge — Xai.
+## Project Structure
+
+```
+src/
+├── app/                          # Next.js App Router
+│   ├── layout.tsx                # Root layout — ThemeProvider, Lenis, nav/footer
+│   ├── page.tsx                  # Landing — 8 sections, 4 dynamic imports
+│   ├── globals.css               # Dual-theme design system (588 lines, oklch)
+│   ├── not-found.tsx             # 404 with motion animations
+│   ├── signin/page.tsx           # Sign-in with demo fill buttons
+│   ├── request-access/page.tsx   # 5-phase state machine (431 lines)
+│   ├── admin/page.tsx            # Admin dashboard (4 tabs, 450 lines)
+│   ├── actions/request-access.ts # Server Action — Zod v4 + Prisma
+│   └── api/route.ts              # Health check endpoint
+├── components/
+│   ├── site/                     # 12 section/layout components
+│   │   ├── hero.tsx              # R3F particle field (auto-play morph)
+│   │   ├── signature.tsx         # 3D core wrapper (auto-play)
+│   │   ├── insight-flow.tsx      # Scroll-reveal stages + SVG visuals
+│   │   ├── dashboard-preview.tsx # Mock UI (charts, tabs, panels, 719 lines)
+│   │   ├── automations.tsx       # Automation cards + pipeline rail
+│   │   ├── landing-sections.tsx  # Narrative band, pillars, metrics
+│   │   ├── scene-3d-background.tsx # CSS-only depth backdrop
+│   │   ├── site-nav.tsx          # Fixed nav + mobile menu
+│   │   ├── site-footer.tsx       # CTA band + footer
+│   │   ├── premium-section-label.tsx # 5 unique SVG section icons
+│   │   ├── scroll-progress.tsx   # Top gradient bar
+│   │   ├── scroll-to-top.tsx     # Floating scroll button
+│   │   └── smooth-scroll.tsx     # Lenis provider
+│   ├── three/                    # Three.js canvases
+│   │   ├── hero-canvas.tsx       # GLSL shader, 1,800 particles
+│   │   └── signature-canvas.tsx  # Icosahedron + 54 orbit nodes
+│   └── ui/                       # Shared UI primitives
+│       ├── toast.tsx             # Radix toast
+│       ├── toaster.tsx           # Toast renderer
+│       └── custom/role-select.tsx # Animated dropdown (keyboard nav)
+├── hooks/                        # Custom React hooks
+│   └── use-toast.ts              # Toast reducer state machine
+├── lib/                          # Shared utilities
+│   ├── motion.ts                 # Framer Motion easing + variants
+│   ├── mock-data.ts              # All mock data + site constants
+│   ├── utils.ts                  # cn() helper (clsx + tailwind-merge)
+│   ├── auth-store.ts             # Zustand auth (localStorage persist)
+│   ├── use-theme-colors.ts       # Recharts ↔ CSS var sync
+│   └── db.ts                     # PrismaClient singleton
+├── prisma/
+│   └── schema.prisma             # AccessRequest model (PostgreSQL)
+└── public/
+    ├── favicon.ico               # Legacy favicon (32x32)
+    ├── favicon.svg               # Modern SVG favicon
+    ├── logo.svg                  # Brand mark
+    ├── site.webmanifest          # PWA manifest
+    ├── robots.txt                # SEO crawl rules
+    └── _headers                  # Netlify security headers
+```
+
+---
+
+## Design System
+
+```mermaid
+mindmap
+  root((Design Tokens<br/>80+ CSS vars))
+    Colors
+      oklch color space
+        --accent Emerald #34d399
+        --accent-warm Amber #fbbf24
+        --background Dark/light pair
+        --foreground
+        --muted-foreground
+    Surfaces
+      --hairline Border tint
+      --surface-1/2/3 Layer tints
+      .glass Blur + saturate
+      .glass-strong Stronger blur
+    Typography
+      Geist Sans Headings
+      Geist Mono Code/metrics
+      .text-display-xl  clamp(2.25rem, 1.6rem + 3.2vw, 4.5rem)
+      .text-display-lg
+      .text-display-md
+      .text-display-sm
+    Effects
+      .lift Hover translateY(-4px)
+      .edge-glow Pseudo gradient border
+      .bg-grain SVG feTurbulence noise
+      .aurora Radial gradient ambient
+    Sections
+      bg-sec-narrative Emerald canopy
+      bg-sec-flow Cool data-stream
+      bg-sec-workspace Warm studio
+      bg-sec-core Dramatic deep-field
+      bg-sec-automations Dual-tone energy
+      bg-sec-pillars Structured wash
+      bg-sec-metrics Closing gradient
+    Shared Easing
+      EASE 0.22, 1, 0.36, 1
+      EASE_OUT_SOFT 0.16, 1, 0.3, 1
+      EASE_IN_OUT 0.65, 0, 0.35, 1
+```
+
+---
+
+## Key Design Decisions
+
+| Decision | Rationale |
+|----------|-----------|
+| **No GSAP** | Insight Flow uses Framer Motion `whileInView` — saves ~56 KB, no scroll-jack risk |
+| **Auto-play 3D** | Three.js canvases auto-oscillate via sin × smoothstep — no scroll dependency, works immediately |
+| **PostgreSQL** | Single `AccessRequest` table with unique email; duplicate detection via Prisma P2002 |
+| **Zod v4** | Server Action validation with type-safe schema → typed 5-phase result (form/success/duplicate/error) |
+| **CSS-only 3D bg** | `scene-3d-background.tsx` creates depth with pure CSS (grid, orbs, parallax) — no WebGL overhead on every page |
+| **Custom dropdown** | `role-select.tsx` replaces native `<select>` with animated panel + full keyboard a11y (WAI-ARIA) |
+| **Lenis** | Configurable frictionless smooth scrolling vs CSS `scroll-behavior` |
+| **Dynamic imports** | 4 heavy sections lazy-loaded via `next/dynamic` — minimal initial JS bundle |
+| **Theme-aware charts** | `useThemeColors` hook syncs Recharts with CSS custom properties — no hardcoded chart colors |
+| **Responsive 3D** | Particle/node counts halved on mobile; camera dolly and FOV adjust per viewport |
+| **oklch color space** | All 80+ CSS variables use perceptual `oklch()` — consistent lightness across light/dark themes |
+
+---
+
+## Performance
+
+| Metric | Value |
+|--------|-------|
+| ESLint errors | 0 |
+| ESLint warnings | 0 |
+| TypeScript errors | 0 |
+| Build tool | Turbopack (Next.js 16) |
+| Build time | ~8s cold cache |
+| Total source files | 35 |
+| Total source lines | ~5,000 |
+| Routes | 5 static + 1 dynamic |
+| Dynamic imports | 4 (InsightFlow, DashboardPreview, Signature, Automations) |
+| Lazy-loaded (ssr:false) | 2 Three.js canvases |
+| CLS | 0 — fixed-position canvases, no `<img>` tags |
+| npm packages | ~507 (post-cleanup) |
+
+---
+
+## Deployment
+
+```mermaid
+flowchart LR
+    subgraph CI["CI/CD (Netlify)"]
+        direction LR
+        GH[Git Push] --> NF[Netlify Import]
+        NF --> Build[npm run build]
+        Build --> Deploy[.next/ → Production]
+    end
+
+    Deploy --> CDN[Global CDN]
+    Deploy --> HDR[Security Headers<br/>HSTS · XFO · CSP]
+
+    style GH fill:#34d39922,stroke:#34d399
+    style Deploy fill:#34d39922,stroke:#34d399
+```
+
+Pre-configured via `netlify.toml` + `public/_headers`:
+
+| Config | Value |
+|--------|-------|
+| Build command | `npm run build` |
+| Publish directory | `.next` |
+| Security | `X-Frame-Options: DENY`, `HSTS`, `Permissions-Policy` |
+| Routing | SPA catch-all redirect |
+| Required env | `DATABASE_URL` (PostgreSQL connection string) |
+
+---
+
+<div align="center">
+  <sub>
+    Built with Next.js 16 · Three.js · Framer Motion · Tailwind v4 · PostgreSQL<br/>
+    <a href="https://github.com/your-org/xai">GitHub</a> &nbsp;·&nbsp; <a href="https://phenomenal-tulumba-88d206.netlify.app">Live Demo</a>
+  </sub>
+</div>

@@ -2,7 +2,7 @@
 
 export const dynamic = "force-dynamic";
 
-import { useState, useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -45,6 +45,8 @@ export default function AdminPage() {
     () => true,
     () => false
   );
+
+  useEffect(() => { document.title = "Admin · Xai"; }, []);
 
   if (!mounted) return null;
   if (!user) {

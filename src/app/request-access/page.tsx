@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { EASE_OUT_SOFT } from "@/lib/motion";
@@ -47,6 +47,8 @@ export default function RequestAccessPage() {
     role: "",
     useCase: "",
   });
+
+  useEffect(() => { document.title = "Request access · Xai"; }, []);
 
   const update = (key: keyof FormState) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

@@ -20,7 +20,7 @@ export default function NotFound() {
           className="mt-5 text-balance text-display-xl font-semibold"
         >
           This page{" "}
-          <span className="text-gradient-accent">didn&apos;t resolve</span>.
+          <span className="text-gradient-accent">couldn&apos;t be found</span>.
         </motion.h1>
         <p className="mx-auto mt-5 max-w-md text-pretty text-muted-foreground">
           The signal got lost. Let&apos;s get you back to the workspace.
@@ -39,11 +39,11 @@ export default function NotFound() {
             <span className="transition-transform group-hover:translate-x-0.5">→</span>
           </Link>
           <Link
-          href="/"
-          className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-hairline bg-surface-1 px-5 py-3 text-[14px] font-medium text-foreground transition-colors hover:bg-surface-2"
-        >
-          Browse workspace
-        </Link>
+            href="/signin"
+            className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-hairline bg-surface-1 px-5 py-3 text-[14px] font-medium text-foreground transition-colors hover:bg-surface-2"
+          >
+            Sign in
+          </Link>
         </motion.div>
       </div>
     </section>

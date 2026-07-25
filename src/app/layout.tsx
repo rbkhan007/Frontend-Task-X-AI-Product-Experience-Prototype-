@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s · Xai",
   },
   description:
-    "Xai turns raw data into structured intelligence and actionable insight — then automates the work.",
+    "Xai turns raw data into structured intelligence and actionable insight — then automates the work. Ship your first automation this week.",
   keywords: [
     "Xai",
     "Intelligence Workspace",
@@ -50,7 +50,10 @@ export const metadata: Metadata = {
       "From raw data → structured intelligence → actionable insight → AI automations.",
   },
   icons: {
-    icon: "/favicon.svg",
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
     shortcut: "/favicon.svg",
     apple: "/favicon.svg",
   },

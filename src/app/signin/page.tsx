@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -15,6 +15,8 @@ export default function SignInPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => { document.title = "Sign in · Xai"; }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,7 +85,7 @@ export default function SignInPage() {
             <div className="min-w-0 flex-1">
               <p className="text-[12px] font-medium text-foreground">Demo credentials</p>
               <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
-                admin@xai.app · member@xai.app · xai-demo
+                admin@xai.app / member@xai.app · password: xai-demo
               </p>
               <div className="mt-2 flex gap-2">
                 <button

@@ -25,12 +25,16 @@ export function Scene3DBackground() {
     if (typeof globalThis !== "undefined" && globalThis.__THREE_CLOCK_FIXED !== true) {
       globalThis.__THREE_CLOCK_FIXED = true;
       try {
+        // eslint-disable-next-line no-console
         const origWarn = console.warn;
+        // eslint-disable-next-line no-console
         console.warn = (...args: unknown[]) => {
           if (typeof args[0] === "string" && args[0].includes("THREE.Clock")) return;
           origWarn.call(console, ...args);
         };
-      } catch { }
+      } catch {
+        // THREE.Clock patch — safe to ignore
+      }
     }
   }, []);
 
