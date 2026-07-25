@@ -101,23 +101,89 @@ function IngestVisual() {
           <stop offset="100%" stopColor="currentColor" stopOpacity="0.9" />
         </linearGradient>
       </defs>
-      {sources.map((y, i) => (
-        <g key={i}>
-          <circle cx="36" cy={y} r="4" className="fill-foreground/40" />
-          <text x="14" y={y - 10} className="fill-muted-foreground" style={{ fontSize: 9, fontFamily: "var(--font-geist-mono)" }}>
-            src{i + 1}
-          </text>
-          <path d={`M40 ${y} C 150 ${y}, 200 200, 300 200`} stroke="url(#ingest-line-stacked)" strokeWidth="1.5" />
-        </g>
-      ))}
-      <g>
-        <circle cx="300" cy="200" r="22" className="fill-accent/10 stroke-accent" strokeWidth="1.5" />
-        <circle cx="300" cy="200" r="8" className="fill-accent" />
-        <circle cx="300" cy="200" r="34" className="stroke-accent/30" strokeWidth="1" />
-      </g>
-      <text x="300" y="252" textAnchor="middle" className="fill-muted-foreground" style={{ fontSize: 9, fontFamily: "var(--font-geist-mono)" }}>
-        unified schema
-      </text>
+      <motion.g
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewportOnce}
+        variants={{ visible: { transition: { staggerChildren: 0.12 } } }}
+      >
+        {sources.map((y, i) => (
+          <motion.g
+            key={i}
+            variants={{
+              hidden: { opacity: 0, x: -20 },
+              visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: EASE_OUT_SOFT } },
+            }}
+          >
+            <motion.circle
+              cx="36" cy={y} r="4" className="fill-foreground/40"
+              variants={{
+                hidden: { scale: 0 },
+                visible: { scale: 1, transition: { type: "spring", stiffness: 300, damping: 15 } },
+              }}
+            />
+            <motion.text
+              x="14" y={y - 10} className="fill-muted-foreground"
+              style={{ fontSize: 9, fontFamily: "var(--font-geist-mono)" }}
+              variants={{
+                hidden: { opacity: 0 },
+                visible: { opacity: 1, transition: { duration: 0.4 } },
+              }}
+            >
+              src{i + 1}
+            </motion.text>
+            <motion.path
+              d={`M40 ${y} C 150 ${y}, 200 200, 300 200`}
+              stroke="url(#ingest-line-stacked)" strokeWidth="1.5"
+              initial={{ pathLength: 0 }}
+              whileInView={{ pathLength: 1 }}
+              viewport={viewportOnce}
+              transition={{ duration: 0.8, delay: 0.1 + i * 0.08, ease: "easeOut" }}
+            />
+          </motion.g>
+        ))}
+      </motion.g>
+      <motion.g
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewportOnce}
+        variants={{
+          hidden: {},
+          visible: { transition: { delay: 0.7, staggerChildren: 0.1 } },
+        }}
+      >
+        <motion.circle
+          cx="300" cy="200" r="22" className="fill-accent/10 stroke-accent" strokeWidth="1.5"
+          variants={{
+            hidden: { scale: 0, opacity: 0 },
+            visible: { scale: 1, opacity: 1, transition: { type: "spring", stiffness: 200, damping: 12 } },
+          }}
+        />
+        <motion.circle
+          cx="300" cy="200" r="8" className="fill-accent"
+          variants={{
+            hidden: { scale: 0 },
+            visible: { scale: 1, transition: { type: "spring", stiffness: 400, damping: 10 } },
+          }}
+        />
+        <motion.circle
+          cx="300" cy="200" r="34" className="stroke-accent/30" strokeWidth="1"
+          variants={{
+            hidden: { scale: 0, opacity: 0 },
+            visible: { scale: 1, opacity: 1, transition: { duration: 0.5 } },
+          }}
+        />
+        <motion.text
+          x="300" y="252" textAnchor="middle" className="fill-muted-foreground"
+          style={{ fontSize: 9, fontFamily: "var(--font-geist-mono)" }}
+          variants={{
+            hidden: { opacity: 0, y: 6 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+          }}
+        >
+          unified schema
+        </motion.text>
+      </motion.g>
     </VisualFrame>
   );
 }
@@ -151,24 +217,65 @@ function AnalyzeVisual() {
           <stop offset="100%" stopColor="currentColor" stopOpacity="0.28" />
         </linearGradient>
       </defs>
-      {edges.map((d, i) => (
-        <path key={i} d={d} stroke="url(#edge-grad-stacked)" strokeWidth="0.8" />
-      ))}
-      <path d={signal} stroke="currentColor" strokeWidth="2" />
-      {nodes.map((n, i) => (
-        <circle
-          key={i}
-          cx={n.x}
-          cy={n.y}
-          r={n.layer === 2 ? 6 : 4.5}
-          className={n.layer === 2 ? "fill-accent stroke-accent/40" : "fill-foreground/70 stroke-foreground/10"}
-          strokeWidth="1"
-        />
-      ))}
+      <motion.g
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewportOnce}
+        variants={{ visible: { transition: { staggerChildren: 0.03 } } }}
+      >
+        {edges.map((d, i) => (
+          <motion.path
+            key={i}
+            d={d}
+            stroke="url(#edge-grad-stacked)" strokeWidth="0.8"
+            variants={{
+              hidden: { pathLength: 0, opacity: 0 },
+              visible: { pathLength: 1, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } },
+            }}
+          />
+        ))}
+      </motion.g>
+      <motion.path
+        d={signal}
+        stroke="currentColor" strokeWidth="2"
+        initial={{ pathLength: 0, opacity: 0 }}
+        whileInView={{ pathLength: 1, opacity: 1 }}
+        viewport={viewportOnce}
+        transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+      />
+      <motion.g
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewportOnce}
+        variants={{ visible: { transition: { staggerChildren: 0.04, delayChildren: 0.3 } } }}
+      >
+        {nodes.map((n, i) => (
+          <motion.circle
+            key={i}
+            cx={n.x}
+            cy={n.y}
+            r={n.layer === 2 ? 6 : 4.5}
+            className={n.layer === 2 ? "fill-accent stroke-accent/40" : "fill-foreground/70 stroke-foreground/10"}
+            strokeWidth="1"
+            variants={{
+              hidden: { scale: 0, opacity: 0 },
+              visible: { scale: 1, opacity: 1, transition: { type: "spring", stiffness: 250, damping: 12 } },
+            }}
+          />
+        ))}
+      </motion.g>
       {["input", "models", "signal"].map((l, i) => (
-        <text key={l} x={colX[i]} y={350} textAnchor="middle" className="fill-muted-foreground" style={{ fontSize: 9, fontFamily: "var(--font-geist-mono)" }}>
+        <motion.text
+          key={l}
+          x={colX[i]} y={350} textAnchor="middle" className="fill-muted-foreground"
+          style={{ fontSize: 9, fontFamily: "var(--font-geist-mono)" }}
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={viewportOnce}
+          transition={{ duration: 0.4, delay: 1 + i * 0.1 }}
+        >
           {l}
-        </text>
+        </motion.text>
       ))}
     </VisualFrame>
   );
@@ -181,10 +288,10 @@ function GenerateVisual() {
   const ox = 90;
   const oy = 60;
   const hot = new Set(["0-2", "1-4", "2-1", "3-3", "4-0", "2-4", "4-2"]);
-  const cells: { r: number; c: number; hot: boolean }[] = [];
+  const cells: { r: number; c: number; hot: boolean; key: string }[] = [];
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
-      cells.push({ r, c, hot: hot.has(`${r}-${c}`) });
+      cells.push({ r, c, hot: hot.has(`${r}-${c}`), key: `${r}-${c}` });
     }
   }
   const cards = [
@@ -195,32 +302,66 @@ function GenerateVisual() {
 
   return (
     <VisualFrame>
-      {cells.map((c) => (
-        <rect
-          key={`${c.r}-${c.c}`}
-          x={ox + c.c * cell}
-          y={oy + c.r * cell}
-          width={cell - 8}
-          height={cell - 8}
-          rx="4"
-          className={c.hot ? "fill-accent/70" : "fill-foreground/10"}
-        />
-      ))}
-      {cards.map((c) => (
-        <g key={c.label}>
-          <rect x={c.x} y={c.y} width={c.w} height={c.h} rx="8" className="fill-card stroke-accent/40" strokeWidth="1" />
-          <rect x={c.x} y={c.y} width={3} height={c.h} className="fill-accent" />
-          <text x={c.x + 12} y={c.y + 18} className="fill-foreground" style={{ fontSize: 9, fontFamily: "var(--font-geist-mono)" }}>
-            {c.label}
-          </text>
-          <text x={c.x + 12} y={c.y + 34} className="fill-muted-foreground" style={{ fontSize: 8 }}>
-            insight · 94% conf.
-          </text>
-        </g>
-      ))}
-      <text x={ox + (cols * cell) / 2} y={oy + rows * cell + 24} textAnchor="middle" className="fill-muted-foreground" style={{ fontSize: 9, fontFamily: "var(--font-geist-mono)" }}>
+      <motion.g
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewportOnce}
+        variants={{ visible: { transition: { staggerChildren: 0.02, delayChildren: 0.1 } } }}
+      >
+        {cells.map((c) => (
+          <motion.rect
+            key={c.key}
+            x={ox + c.c * cell}
+            y={oy + c.r * cell}
+            width={cell - 8}
+            height={cell - 8}
+            rx="4"
+            className={c.hot ? "fill-accent/70" : "fill-foreground/10"}
+            variants={{
+              hidden: { opacity: 0, scale: 0.6 },
+              visible: { opacity: 1, scale: 1, transition: { duration: 0.3, ease: "easeOut" } },
+            }}
+          />
+        ))}
+      </motion.g>
+      <motion.g
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewportOnce}
+        variants={{ visible: { transition: { staggerChildren: 0.12, delayChildren: 0.6 } } }}
+      >
+        {cards.map((c) => (
+          <motion.g
+            key={c.label}
+            variants={{
+              hidden: { opacity: 0, x: 40 },
+              visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: EASE_OUT_SOFT } },
+            }}
+          >
+            <rect x={c.x} y={c.y} width={c.w} height={c.h} rx="8" className="fill-card stroke-accent/40" strokeWidth="1" />
+            <rect x={c.x} y={c.y} width={3} height={c.h} className="fill-accent" />
+            <text x={c.x + 12} y={c.y + 18} className="fill-foreground" style={{ fontSize: 9, fontFamily: "var(--font-geist-mono)" }}>
+              {c.label}
+            </text>
+            <text x={c.x + 12} y={c.y + 34} className="fill-muted-foreground" style={{ fontSize: 8 }}>
+              insight · 94% conf.
+            </text>
+          </motion.g>
+        ))}
+      </motion.g>
+      <motion.text
+        x={ox + (cols * cell) / 2}
+        y={oy + rows * cell + 24}
+        textAnchor="middle"
+        className="fill-muted-foreground"
+        style={{ fontSize: 9, fontFamily: "var(--font-geist-mono)" }}
+        initial={{ opacity: 0, y: 8 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={viewportOnce}
+        transition={{ duration: 0.4, delay: 1.2 }}
+      >
         findings → structured insights
-      </text>
+      </motion.text>
     </VisualFrame>
   );
 }
