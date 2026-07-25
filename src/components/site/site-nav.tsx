@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -11,10 +11,21 @@ import { NAV_LINKS } from "@/lib/mock-data";
 export function SiteNav() {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
+  const lastScroll = useRef(0);
 
   useMotionValueEvent(scrollY, "change", (v) => {
     setScrolled(v > 24);
+    const delta = v - lastScroll.current;
+    if (v < 24) {
+      setHidden(false);
+    } else if (delta > 8 && !hidden) {
+      setHidden(true);
+    } else if (delta < -4 && hidden) {
+      setHidden(false);
+    }
+    lastScroll.current = v;
   });
 
   const closeMenu = useCallback(() => setOpen(false), []);
@@ -30,8 +41,8 @@ export function SiteNav() {
   return (
     <motion.header
       initial={{ y: -28, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+      animate={{ y: hidden ? -80 : 0, opacity: hidden ? 0 : 1 }}
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
       className="fixed inset-x-0 top-0 z-50 flex justify-center px-3 pt-3 sm:px-4 sm:pt-4"
     >
       <nav
