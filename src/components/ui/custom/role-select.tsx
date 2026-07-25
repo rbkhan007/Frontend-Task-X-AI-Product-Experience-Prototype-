@@ -28,6 +28,8 @@ export function RoleSelect({
   const [focusedIdx, setFocusedIdx] = useState(-1);
   const ref = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const focusedRef = useRef(focusedIdx);
+  useEffect(() => { focusedRef.current = focusedIdx; }, [focusedIdx]);
 
   const selected = value || "Select…";
 
@@ -40,16 +42,22 @@ export function RoleSelect({
     [onChange]
   );
 
-  useEffect(() => {
-    if (!open) { setFocusedIdx(-1); return; }
-    setFocusedIdx(value ? ROLES.indexOf(value as typeof ROLES[number]) : -1);
-  }, [open, value]);
+  const toggleOpen = useCallback(() => {
+    setOpen((prev) => {
+      if (!prev) {
+        setFocusedIdx(value ? ROLES.indexOf(value as typeof ROLES[number]) : -1);
+      } else {
+        setFocusedIdx(-1);
+      }
+      return !prev;
+    });
+  }, [value]);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (!open) {
         if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
-          setOpen(true);
+          toggleOpen();
           e.preventDefault();
         }
         return;
@@ -66,16 +74,17 @@ export function RoleSelect({
         case "Enter":
         case " ":
           e.preventDefault();
-          if (focusedIdx >= 0) select(ROLES[focusedIdx]);
+          if (focusedRef.current >= 0) select(ROLES[focusedRef.current]);
           break;
         case "Escape":
           setOpen(false);
+          setFocusedIdx(-1);
           break;
       }
     };
     document.addEventListener("keydown", handleKey);
     return () => document.removeEventListener("keydown", handleKey);
-  }, [open, focusedIdx, select]);
+  }, [open, select, toggleOpen]);
 
   useEffect(() => {
     if (!open || focusedIdx < 0) return;
@@ -87,6 +96,7 @@ export function RoleSelect({
     const handleClickOutside = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) {
         setOpen(false);
+        setFocusedIdx(-1);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -98,10 +108,11 @@ export function RoleSelect({
       <button
         type="button"
         role="combobox"
+        aria-controls="role-listbox"
         aria-expanded={open}
         aria-haspopup="listbox"
         aria-label="Select role"
-        onClick={() => setOpen((p) => !p)}
+        onClick={toggleOpen}
         className={cn(
           "auth-input flex items-center justify-between",
           !value && "text-muted-foreground/60",
@@ -122,6 +133,7 @@ export function RoleSelect({
         {open && (
           <motion.div
             ref={listRef}
+            id="role-listbox"
             role="listbox"
             initial={{ opacity: 0, y: -6, filter: "blur(4px)", scale: 0.96 }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)", scale: 1 }}

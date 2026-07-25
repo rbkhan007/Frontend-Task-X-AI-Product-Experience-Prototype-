@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { SectionLabel } from "@/components/site/insight-flow";
 

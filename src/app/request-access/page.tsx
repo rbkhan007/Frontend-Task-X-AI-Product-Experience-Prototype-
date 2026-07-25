@@ -58,7 +58,8 @@ export default function RequestAccessPage() {
     e.preventDefault();
     setPage({ phase: "submitting" });
 
-    const fd = new FormData(formRef.current!);
+    if (!formRef.current) return;
+    const fd = new FormData(formRef.current);
     const result: RequestAccessResult = await submitRequest(fd);
 
     if (result.ok) {

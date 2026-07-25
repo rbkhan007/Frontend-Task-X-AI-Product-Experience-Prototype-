@@ -5,11 +5,6 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { MeshDistortMaterial, Icosahedron, Sphere } from "@react-three/drei";
 import * as THREE from "three";
 
-function getNodeCount() {
-  if (typeof window === "undefined") return 54;
-  return window.innerWidth < 768 ? 28 : 54;
-}
-
 type OrbitNode = {
   radius: [number, number];
   speed: number;

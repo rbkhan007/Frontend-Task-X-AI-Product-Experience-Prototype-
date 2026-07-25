@@ -18,6 +18,32 @@ type Props = {
   theme: Theme;
 };
 
+function generateSeedData(count: number, mobile: boolean) {
+  const chaos = new Float32Array(count * 3);
+  const structure = new Float32Array(count * 3);
+  const sizes = new Float32Array(count);
+  const seeds = new Float32Array(count);
+  const R = mobile ? 3.6 : 4.3;
+  const golden = Math.PI * (1.0 + Math.sqrt(5.0));
+  for (let i = 0; i < count; i++) {
+    const t = (i + 0.5) / count;
+    const phi = Math.acos(1.0 - 2.0 * t);
+    const theta = golden * (i + 0.5);
+    structure[i * 3] = R * Math.sin(phi) * Math.cos(theta);
+    structure[i * 3 + 1] = R * Math.cos(phi);
+    structure[i * 3 + 2] = R * Math.sin(phi) * Math.sin(theta);
+    const ct = Math.random() * Math.PI * 2;
+    const cp = Math.acos(2.0 * Math.random() - 1.0);
+    const cr = 1.6 + Math.pow(Math.random(), 0.6) * 4.8;
+    chaos[i * 3] = cr * Math.sin(cp) * Math.cos(ct) * 1.25;
+    chaos[i * 3 + 1] = cr * Math.cos(cp) * 1.5 - 0.3;
+    chaos[i * 3 + 2] = cr * Math.sin(cp) * Math.sin(ct) * 1.25;
+    sizes[i] = 3.0 + Math.random() * 5.0;
+    seeds[i] = Math.random();
+  }
+  return { chaos, structure, sizes, seeds };
+}
+
 function ParticleField({ progressRef, theme }: Props) {
   const pointsRef = useRef<THREE.Points>(null);
   const groupRef = useRef<THREE.Group>(null);
@@ -27,32 +53,7 @@ function ParticleField({ progressRef, theme }: Props) {
 
   const geometry = useMemo(() => {
     const geo = new THREE.BufferGeometry();
-    const chaos = new Float32Array(COUNT * 3);
-    const structure = new Float32Array(COUNT * 3);
-    const sizes = new Float32Array(COUNT);
-    const seeds = new Float32Array(COUNT);
-
-    const R = isMobile ? 3.6 : 4.3;
-    const golden = Math.PI * (1.0 + Math.sqrt(5.0));
-    for (let i = 0; i < COUNT; i++) {
-      const t = (i + 0.5) / COUNT;
-      const phi = Math.acos(1.0 - 2.0 * t);
-      const theta = golden * (i + 0.5);
-      structure[i * 3] = R * Math.sin(phi) * Math.cos(theta);
-      structure[i * 3 + 1] = R * Math.cos(phi);
-      structure[i * 3 + 2] = R * Math.sin(phi) * Math.sin(theta);
-
-      const ct = Math.random() * Math.PI * 2;
-      const cp = Math.acos(2.0 * Math.random() - 1.0);
-      const cr = 1.6 + Math.pow(Math.random(), 0.6) * 4.8;
-      chaos[i * 3] = cr * Math.sin(cp) * Math.cos(ct) * 1.25;
-      chaos[i * 3 + 1] = cr * Math.cos(cp) * 1.5 - 0.3;
-      chaos[i * 3 + 2] = cr * Math.sin(cp) * Math.sin(ct) * 1.25;
-
-      sizes[i] = 3.0 + Math.random() * 5.0;
-      seeds[i] = Math.random();
-    }
-
+    const { chaos, structure, sizes, seeds } = generateSeedData(COUNT, isMobile);
     geo.setAttribute("position", new THREE.BufferAttribute(chaos.slice(), 3));
     geo.setAttribute("aChaos", new THREE.BufferAttribute(chaos, 3));
     geo.setAttribute("aStructure", new THREE.BufferAttribute(structure, 3));
