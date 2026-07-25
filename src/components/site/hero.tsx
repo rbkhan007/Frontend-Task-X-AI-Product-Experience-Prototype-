@@ -30,13 +30,14 @@ export function Hero() {
     resolvedTheme === "light" ? "light" : "dark";
 
   useEffect(() => {
-    const start = performance.now();
-    const dur = 3200;
     let raf: number;
+    const start = performance.now();
     const tick = () => {
-      const t = Math.min(1, (performance.now() - start) / dur);
-      progressRef.current = t;
-      if (t < 1) raf = requestAnimationFrame(tick);
+      const elapsed = (performance.now() - start) / 1000;
+      const raw = Math.sin(elapsed * 0.4);
+      const t = (raw + 1) / 2;
+      progressRef.current = t * t * (3 - 2 * t);
+      raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
