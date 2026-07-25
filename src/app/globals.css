@@ -1,0 +1,588 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  /* semantic "tint" tokens — flip per theme so components never hardcode
+     white/black alphas. Use: border-hairline, bg-surface-1/2/3, etc. */
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-grid-line: var(--grid-line);
+  --color-scrim: var(--scrim);
+  /* warm amber co-accent — dual-tone depth with the emerald */
+  --color-accent-warm: var(--accent-warm);
+  --color-accent-warm-foreground: var(--accent-warm-foreground);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* ------------------------------------------------------------------ */
+/*  LIGHT THEME (default)                                              */
+/* ------------------------------------------------------------------ */
+:root {
+  --radius: 0.75rem;
+  /* warm off-white base with a subtle emerald tint — not flat white */
+  --background: oklch(0.985 0.004 165);
+  --foreground: oklch(0.18 0.006 220);
+  --card: oklch(0.978 0.004 165);
+  --card-foreground: oklch(0.18 0.006 220);
+  --popover: oklch(0.985 0.004 165);
+  --popover-foreground: oklch(0.18 0.006 220);
+  --primary: oklch(0.18 0.006 220);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.955 0.005 165);
+  --secondary-foreground: oklch(0.18 0.006 220);
+  --muted: oklch(0.955 0.005 165);
+  --muted-foreground: oklch(0.46 0.01 220);
+  --accent: oklch(0.60 0.15 165);
+  --accent-foreground: oklch(0.99 0 0);
+  /* warm amber co-accent — gold for depth/warmth */
+  --accent-warm: oklch(0.62 0.16 65);
+  --accent-warm-foreground: oklch(0.16 0.01 60);
+  --destructive: oklch(0.58 0.22 25);
+  --border: oklch(0.18 0.006 220 / 10%);
+  --input: oklch(0.18 0.006 220 / 12%);
+  --ring: oklch(0.60 0.15 165 / 45%);
+  /* tints — black-on-white */
+  --hairline: oklch(0.18 0.006 220 / 9%);
+  --hairline-strong: oklch(0.18 0.006 220 / 16%);
+  --surface-1: oklch(0.18 0.006 220 / 3%);
+  --surface-2: oklch(0.18 0.006 220 / 5%);
+  --surface-3: oklch(0.18 0.006 220 / 8%);
+  --grid-line: oklch(0.18 0.006 220 / 5%);
+  --scrim: oklch(0.985 0.004 165 / 74%);
+  /* data viz (deeper for light-bg contrast) */
+  --chart-1: oklch(0.60 0.15 165);
+  --chart-2: oklch(0.55 0.13 135);
+  --chart-3: oklch(0.62 0.16 65);
+  --chart-4: oklch(0.60 0.16 38);
+  --chart-5: oklch(0.50 0.02 220);
+  --sidebar: oklch(0.968 0.004 165);
+  --sidebar-foreground: oklch(0.18 0.006 220);
+  --sidebar-primary: oklch(0.60 0.15 165);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.93 0.004 250);
+  --sidebar-accent-foreground: oklch(0.18 0.004 250);
+  --sidebar-border: oklch(0.18 0.004 250 / 8%);
+  --sidebar-ring: oklch(0.62 0.14 165 / 45%);
+}
+
+/* ------------------------------------------------------------------ */
+/*  DARK THEME                                                         */
+/* ------------------------------------------------------------------ */
+.dark {
+  /* deep teal-tinted charcoal — not flat black; reads as 'intelligent space' */
+  --background: oklch(0.155 0.012 200);
+  --foreground: oklch(0.97 0.004 180);
+  --card: oklch(0.20 0.012 200);
+  --card-foreground: oklch(0.97 0.004 180);
+  --popover: oklch(0.18 0.012 200);
+  --popover-foreground: oklch(0.97 0.004 180);
+  --primary: oklch(0.97 0.004 180);
+  --primary-foreground: oklch(0.155 0.012 200);
+  --secondary: oklch(0.25 0.014 200);
+  --secondary-foreground: oklch(0.97 0.004 180);
+  --muted: oklch(0.23 0.012 200);
+  --muted-foreground: oklch(0.68 0.014 190);
+  --accent: oklch(0.80 0.16 162);
+  --accent-foreground: oklch(0.155 0.012 200);
+  /* warm amber co-accent — gold glow for dual-tone depth */
+  --accent-warm: oklch(0.82 0.15 75);
+  --accent-warm-foreground: oklch(0.155 0.012 200);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.80 0.16 162 / 50%);
+  /* tints — white-on-dark */
+  --hairline: oklch(1 0 0 / 9%);
+  --hairline-strong: oklch(1 0 0 / 16%);
+  --surface-1: oklch(1 0 0 / 3%);
+  --surface-2: oklch(1 0 0 / 6%);
+  --surface-3: oklch(1 0 0 / 9%);
+  --grid-line: oklch(1 0 0 / 4%);
+  --scrim: oklch(0.155 0.012 200 / 72%);
+  /* data viz */
+  --chart-1: oklch(0.80 0.16 162);
+  --chart-2: oklch(0.82 0.13 130);
+  --chart-3: oklch(0.82 0.15 75);
+  --chart-4: oklch(0.70 0.15 40);
+  --chart-5: oklch(0.72 0.02 200);
+  --sidebar: oklch(0.13 0.012 200);
+  --sidebar-foreground: oklch(0.97 0.004 180);
+  --sidebar-primary: oklch(0.80 0.16 162);
+  --sidebar-primary-foreground: oklch(0.155 0.012 200);
+  --sidebar-accent: oklch(0.25 0.014 200);
+  --sidebar-accent-foreground: oklch(0.97 0.004 180);
+  --sidebar-border: oklch(1 0 0 / 7%);
+  --sidebar-ring: oklch(0.80 0.16 162 / 50%);
+}
+
+  @layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  section[id] {
+    scroll-margin-top: 80px;
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 800px;
+  }
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-size: clamp(15px, 0.93rem + 0.4vw, 18px);
+  }
+  body {
+    @apply bg-background text-foreground;
+    background-color: var(--background);
+    overflow-x: hidden;
+    transition: background-color 0.4s ease;
+    /* mobile safe-area (iPhone notch / home indicator) */
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
+  }
+  *:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  ::selection {
+    background: oklch(0.62 0.14 165 / 28%);
+    color: var(--foreground);
+  }
+  /* SVG stroke/fill helpers that follow theme */
+  .dark ::selection {
+    background: oklch(0.78 0.15 162 / 30%);
+    color: var(--foreground);
+  }
+  /* responsive media: allow native gestures to override smooth-scroll */
+  @media (max-width: 768px) {
+    html { scroll-behavior: auto; }
+  }
+}
+
+@layer utilities {
+  /* Emerald signature glow (theme-tuned) */
+  .glow-accent {
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent), transparent 80%),
+      0 0 40px -8px color-mix(in oklab, var(--accent), transparent 65%);
+  }
+  .text-glow-accent {
+    text-shadow: 0 0 24px color-mix(in oklab, var(--accent), transparent 55%);
+  }
+  /* Hairline gradient borders */
+  .border-hairline {
+    border: 1px solid var(--hairline);
+  }
+  /* Fine grid backdrop (theme-aware line color) */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+  .bg-grid-fine {
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  /* Radial fade mask helpers */
+  .mask-radial-faded {
+    -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, #000 30%, transparent 75%);
+    mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, #000 30%, transparent 75%);
+  }
+  .mask-fade-y {
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+  }
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  }
+  /* Gradient text — follows foreground so it reads in both themes */
+  .text-gradient {
+    background: linear-gradient(180deg, var(--foreground) 0%, var(--muted-foreground) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  /* signature emerald → warm amber dual-tone gradient (the unique identity) */
+  .text-gradient-accent {
+    background: linear-gradient(110deg, var(--accent) 0%, var(--accent) 45%, var(--accent-warm) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  /* emerald-only gradient (for accents that should stay cool) */
+  .text-gradient-emerald {
+    background: linear-gradient(180deg, var(--accent) 0%, color-mix(in oklab, var(--accent), var(--foreground) 30%) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  /* Premium scrollbar (theme-aware) */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--hairline-strong) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: var(--hairline-strong);
+    border-radius: 999px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: var(--surface-3);
+  }
+  /* Ambient aurora backdrop — accent tints, tuned per theme via --accent */
+  .aurora {
+    background:
+      radial-gradient(60% 50% at 20% 10%, color-mix(in oklab, var(--accent), transparent 88%), transparent 60%),
+      radial-gradient(50% 50% at 85% 20%, color-mix(in oklab, var(--chart-2), transparent 90%), transparent 60%),
+      radial-gradient(60% 60% at 50% 100%, color-mix(in oklab, var(--chart-3), transparent 91%), transparent 55%);
+  }
+  /* Page ambient — distinct per-theme background texture.
+     Dark = deep glow; Light = soft tinted wash. */
+  .bg-ambient {
+    background:
+      radial-gradient(80% 60% at 50% -10%, color-mix(in oklab, var(--accent), transparent 92%), transparent 60%),
+      var(--background);
+  }
+
+  /* Fluid display typography — scales smoothly from phone to desktop.
+     Using clamp() so headings grow with viewport without breakpoint jumps. */
+  .text-display-xl {
+    font-size: clamp(2.25rem, 1.6rem + 3.2vw, 4.5rem);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+  }
+  .text-display-lg {
+    font-size: clamp(2rem, 1.5rem + 2.4vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+  }
+  .text-display-md {
+    font-size: clamp(1.625rem, 1.3rem + 1.6vw, 2.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .text-display-sm {
+    font-size: clamp(1.375rem, 1.2rem + 0.9vw, 1.875rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  /* responsive section padding — generous on desktop, tight on phones */
+  .section-y {
+    padding-top: clamp(4rem, 3rem + 8vw, 10rem);
+    padding-bottom: clamp(4rem, 3rem + 8vw, 10rem);
+  }
+
+  /* ---- 3D depth / glass system (used across all sections) ---- */
+
+  /* Glass surface — layered card with subtle inner highlight + depth shadow. */
+  .glass {
+    will-change: transform;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--card), transparent 0%) 0%,
+        color-mix(in oklab, var(--card), transparent 18%) 100%
+      );
+    backdrop-filter: blur(12px) saturate(120%);
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
+    border: 1px solid var(--hairline);
+    box-shadow:
+      inset 0 1px 0 0 color-mix(in oklab, var(--foreground), transparent 92%),
+      0 1px 2px 0 rgba(0, 0, 0, 0.04),
+      0 12px 40px -16px rgba(0, 0, 0, 0.5);
+  }
+  .glass-strong {
+    will-change: transform;
+    background: var(--card);
+    backdrop-filter: blur(20px) saturate(130%);
+    -webkit-backdrop-filter: blur(20px) saturate(130%);
+    border: 1px solid var(--hairline);
+    box-shadow:
+      inset 0 1px 0 0 color-mix(in oklab, var(--foreground), transparent 88%),
+      0 24px 60px -24px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Auth form input — consistent style for sign-in / request-access */
+  .auth-input {
+    height: 2.75rem;
+    width: 100%;
+    border-radius: 0.75rem;
+    border: 1px solid var(--hairline);
+    background: var(--surface-1);
+    padding-left: 2.5rem;
+    padding-right: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--foreground);
+    outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  select.auth-input {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 2.5rem;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+  }
+  .auth-input::placeholder {
+    color: color-mix(in oklab, var(--muted-foreground), transparent 40%);
+  }
+  .auth-input:focus {
+    border-color: color-mix(in oklab, var(--accent), transparent 50%);
+    background: var(--surface-2);
+  }
+
+  /* 3D float-on-hover lift — used on interactive cards */
+  .lift {
+    will-change: transform, box-shadow;
+    transition:
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.3s ease;
+  }
+  .lift:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      inset 0 1px 0 0 color-mix(in oklab, var(--foreground), transparent 88%),
+      0 2px 4px 0 rgba(0, 0, 0, 0.06),
+      0 28px 60px -20px rgba(0, 0, 0, 0.55),
+      0 0 0 1px color-mix(in oklab, var(--accent), transparent 80%);
+  }
+
+  /* Accent edge glow — a soft top-edge highlight for "primary" cards */
+  .edge-glow::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--accent), transparent 60%),
+      transparent 40%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  /* Section depth divider — a subtle horizontal hairline with accent center,
+     used between sections to reinforce the layered feel. */
+  .divider-depth {
+    position: relative;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--hairline) 20%,
+      var(--hairline) 80%,
+      transparent
+    );
+  }
+  .divider-depth::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 64px;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      color-mix(in oklab, var(--accent), transparent 30%),
+      transparent
+    );
+  }
+
+  /* Number display — for the metrics band; gradient + subtle glow */
+  .num-display {
+    background: linear-gradient(
+      180deg,
+      var(--foreground) 0%,
+      color-mix(in oklab, var(--foreground), var(--muted-foreground) 55%) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  .num-display-accent {
+    background: linear-gradient(
+      110deg,
+      var(--accent) 0%,
+      var(--accent) 50%,
+      var(--accent-warm) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    text-shadow: 0 0 40px color-mix(in oklab, var(--accent), transparent 70%);
+  }
+
+  /* ================================================================ */
+  /*  UNIQUE PER-SECTION DYNAMIC BACKGROUNDS                          */
+  /*  Each section gets a distinct, theme-aware mesh-gradient + grain  */
+  /*  treatment so scrolling feels like a journey through the loop.    */
+  /* ================================================================ */
+
+  /* shared grain overlay — gives every section a tactile, non-flat surface */
+  .bg-grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* 1. NARRATIVE — emerald canopy: top-lit mesh, calm */
+  .bg-sec-narrative {
+    background:
+      radial-gradient(120% 80% at 50% -10%, color-mix(in oklab, var(--accent), transparent 86%), transparent 60%),
+      radial-gradient(80% 60% at 15% 110%, color-mix(in oklab, var(--accent-warm), transparent 90%), transparent 55%),
+      var(--background);
+  }
+
+  /* 2. FLOW — cool data-stream: emerald + teal lateral mesh with a faint grid */
+  .bg-sec-flow {
+    background:
+      radial-gradient(60% 70% at 85% 30%, color-mix(in oklab, var(--accent), transparent 84%), transparent 60%),
+      radial-gradient(50% 60% at 10% 70%, color-mix(in oklab, var(--chart-2), transparent 88%), transparent 60%),
+      linear-gradient(180deg, transparent, color-mix(in oklab, var(--accent), transparent 94%) 60%, transparent),
+      var(--background);
+  }
+  .bg-sec-flow::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px);
+    background-size: 84px 100%;
+    mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent);
+    opacity: 0.6;
+  }
+
+  /* 3. WORKSPACE — warm studio: amber-warm neutral, product-UI backdrop */
+  .bg-sec-workspace {
+    background:
+      radial-gradient(90% 70% at 80% 0%, color-mix(in oklab, var(--accent-warm), transparent 90%), transparent 55%),
+      radial-gradient(70% 60% at 0% 100%, color-mix(in oklab, var(--accent), transparent 90%), transparent 55%),
+      var(--background);
+  }
+
+  /* 4. CORE — dramatic deep-field: the WOW moment, darkest + most atmospheric */
+  .bg-sec-core {
+    background:
+      radial-gradient(70% 70% at 50% 50%, color-mix(in oklab, var(--accent), transparent 80%), transparent 60%),
+      radial-gradient(50% 50% at 20% 20%, color-mix(in oklab, var(--accent-warm), transparent 88%), transparent 60%),
+      radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--background), #000 30%), var(--background));
+  }
+
+  /* 5. AUTOMATIONS — energetic blend: emerald + amber intersecting */
+  .bg-sec-automations {
+    background:
+      radial-gradient(60% 60% at 25% 30%, color-mix(in oklab, var(--accent), transparent 84%), transparent 55%),
+      radial-gradient(55% 55% at 80% 75%, color-mix(in oklab, var(--accent-warm), transparent 86%), transparent 55%),
+      var(--background);
+  }
+
+  /* 6. PILLARS — calm structured: even dual-tone wash */
+  .bg-sec-pillars {
+    background:
+      radial-gradient(100% 60% at 50% 0%, color-mix(in oklab, var(--accent), transparent 90%), transparent 60%),
+      radial-gradient(100% 60% at 50% 100%, color-mix(in oklab, var(--accent-warm), transparent 92%), transparent 60%),
+      var(--background);
+  }
+
+  /* 7. METRICS — closing gradient: emerald fade to background */
+  .bg-sec-metrics {
+    background:
+      linear-gradient(180deg, transparent, color-mix(in oklab, var(--accent), transparent 90%) 40%, color-mix(in oklab, var(--accent-warm), transparent 92%) 80%, transparent),
+      var(--background);
+  }
+
+  /* animated drift for the mesh orbs (used by sections that want subtle life) */
+  .bg-drift {
+    animation: bg-drift 24s ease-in-out infinite;
+  }
+  @keyframes bg-drift {
+    0%, 100% { background-position: 0% 0%, 100% 100%, 50% 50%; }
+    50% { background-position: 12% 8%, 88% 92%, 50% 50%; }
+  }
+}
+
+/* Reduced motion respect */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

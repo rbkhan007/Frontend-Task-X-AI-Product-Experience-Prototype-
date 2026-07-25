@@ -1,0 +1,17 @@
+{
+  "name": "Xai — Intelligence Workspace",
+  "short_name": "Xai",
+  "description": "Xai turns raw data into structured intelligence and actionable insight — then automates the work.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0f0d",
+  "theme_color": "#34d399",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

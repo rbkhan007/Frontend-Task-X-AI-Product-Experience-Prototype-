@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28" height="28" aria-hidden="true">
+  <defs>
+    <linearGradient id="xai-logo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="oklch(0.85 0.13 162)" />
+      <stop offset="100%" stop-color="oklch(0.62 0.14 175)" />
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="26" height="26" rx="8"
+    fill="#0a0f0d" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+  <path d="M9 9 L19 19 M19 9 L9 19"
+    stroke="url(#xai-logo)" stroke-width="2" stroke-linecap="round" />
+  <circle cx="14" cy="14" r="2.2" fill="url(#xai-logo)" />
+</svg>

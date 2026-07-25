@@ -1,0 +1,60 @@
+# --- dependencies ---
+node_modules/
+.pnp
+.pnp.js
+
+# --- next.js ---
+.next/
+out/
+build/
+dist/
+
+# --- production ---
+.cache/
+
+# --- env ---
+.env
+.env.*
+!.env.example
+
+# --- IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- OS ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# --- logs ---
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# --- typescript ---
+*.tsbuildinfo
+next-env.d.ts
+
+# --- prisma / database ---
+prisma/db/
+
+# --- turbo ---
+.turbo/
+
+# --- runtime / generated ---
+dev-server.err
+dev-server.log
+
+# --- misc project files ---
+worklog.md
+Clienetneeded.txt
